@@ -1,0 +1,25 @@
+{
+  "name": "kaiten-cli",
+  "version": "1.0.0",
+  "description": "Optimized CLI for Kaiten API - 95% token savings",
+  "main": "index.js",
+  "bin": {
+    "kaiten": "./index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js help"
+  },
+  "keywords": [
+    "kaiten",
+    "cli",
+    "api",
+    "project-management"
+  ],
+  "author": "Anton",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.12.2"
+  }
+}

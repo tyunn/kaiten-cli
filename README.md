@@ -1,13 +1,13 @@
-# Kaiten CLI
+# Kaiten MCP
 
-CLI-инструмент и SDK для работы с Kaiten API с оптимизацией токенов.
+MCP Server и CLI-инструмент для работы с Kaiten API с оптимизацией токенов.
 
 ## Установка
 
 ### 1. Клонируйте репозиторий
 ```bash
-git clone <repo-url> kaiten-cli
-cd kaiten-cli
+git clone https://github.com/tyunn/kaiten-mcp.git
+cd kaiten-mcp
 npm install
 ```
 
@@ -38,12 +38,14 @@ EOF
   "mcpServers": {
     "kaiten": {
       "command": "node",
-      "args": ["/путь/к/kaiten-cli/index.js"],
+      "args": ["/путь/к/kaiten-mcp/index.js"],
       "cwd": "/путь/к/вашему/проекту"
     }
   }
 }
 ```
+
+**Примечание**: Этот инструмент предназначен прежде всего для работы через MCP server с AI ассистентами.
 
 ### 4. Настройка конфигурации
 

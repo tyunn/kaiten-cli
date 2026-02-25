@@ -1,12 +1,16 @@
 {
   "name": "kaiten-cli",
-  "version": "1.0.0",
-  "description": "Optimized CLI for Kaiten API - 95% token savings",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "CLI tool and SDK for Kaiten API - optimized data and full card management",
+  "main": "src/sdk.js",
   "bin": {
     "kaiten": "./index.js"
   },
   "type": "module",
+  "exports": {
+    ".": "./src/sdk.js",
+    "./api": "./src/api/index.js"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "node index.js help"
@@ -15,11 +19,17 @@
     "kaiten",
     "cli",
     "api",
-    "project-management"
+    "project-management",
+    "sdk",
+    "task-management"
   ],
   "author": "Anton",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.12.2"
-  }
+  },
+  "files": [
+    "src/",
+    "index.js"
+  ]
 }

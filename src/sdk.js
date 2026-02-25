@@ -1,4 +1,5 @@
 import * as api from './api/index.js';
+import * as gitApi from './api/git.js';
 import { getConfig } from './utils/config.js';
 
 export class KaitenSDK {
@@ -196,6 +197,55 @@ export class KaitenSDK {
 
   getUsers() {
     return api.getUsers();
+  }
+
+  async getCurrentBranch() {
+    return gitApi.getCurrentBranch();
+  }
+
+  async createGitBranch(cardId, title) {
+    const isRepo = await gitApi.isGitRepo();
+    if (!isRepo) {
+      throw new Error('Not a git repository');
+    }
+    return gitApi.createBranch(cardId, title);
+  }
+
+  async checkoutGitBranch(cardId, title) {
+    const isRepo = await gitApi.isGitRepo();
+    if (!isRepo) {
+      throw new Error('Not a git repository');
+    }
+    return gitApi.checkoutBranch(cardId, title);
+  }
+
+  async commitGit(cardId, message) {
+    return gitApi.commitChanges(cardId, message);
+  }
+
+  async getGitChanges() {
+    return gitApi.getCurrentChanges();
+  }
+
+  async getGitStatus() {
+    return gitApi.getCurrentChanges();
+  }
+
+  async gitAddAll() {
+    return gitApi.addAllFiles();
+  }
+
+  async gitPush(cardId, title) {
+    const isRepo = await gitApi.isGitRepo();
+    if (!isRepo) {
+      throw new Error('Not a git repository');
+    }
+    const branchName = await this.createGitBranch(cardId, title);
+    return gitApi.pushBranch(branchName);
+  }
+
+  async createPullRequest(cardId, title) {
+    return gitApi.createPR(cardId, title);
   }
 }
 

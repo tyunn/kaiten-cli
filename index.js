@@ -306,6 +306,58 @@ async function main() {
         }
         break;
 
+      case 'git-branch':
+        const gitCardId = args[1];
+        if (!gitCardId) {
+          console.error('Error: Card ID required');
+          process.exit(1);
+        }
+        const card = await sdk.getCard(gitCardId);
+        const branchName = await sdk.createGitBranch(gitCardId, card.title);
+        console.log(`Created branch: ${branchName}`);
+        console.log(`Card: ${card.title} (${gitCardId})`);
+        break;
+
+      case 'git-checkout':
+        const checkoutCardId = args[1];
+        if (!checkoutCardId) {
+          console.error('Error: Card ID required');
+          process.exit(1);
+        }
+        const card = await sdk.getCard(checkoutCardId);
+        const branchName = await sdk.checkoutGitBranch(checkoutCardId, card.title);
+        console.log(`Checked out to: ${branchName}`);
+        console.log(`Card: ${card.title} (${checkoutCardId})`);
+        break;
+
+      case 'git-commit':
+        const commitCardId = args[1];
+        const commitMessage = args[2] || 'Work in progress';
+        if (!commitCardId) {
+          console.error('Error: Card ID required');
+          process.exit(1);
+        }
+        await sdk.gitAddAll();
+        const result = await sdk.commitGit(commitCardId, commitMessage);
+        console.log(`[${commitCardId}] ${commitMessage}`);
+        break;
+
+      case 'git-status':
+        const status = await sdk.getGitStatus();
+        console.log(status);
+        break;
+
+      case 'git-push':
+        const pushCardId = args[1];
+        if (!pushCardId) {
+          console.error('Error: Card ID required');
+          process.exit(1);
+        }
+        const card = await sdk.getCard(pushCardId);
+        const currentBranch = await sdk.gitPush(pushCardId, card.title);
+        console.log(`Pushed branch: ${currentBranch}`);
+        break;
+
       case 'help':
       case '--help':
       case '-h':
@@ -348,14 +400,23 @@ Kaiten CLI - Полнофункциональный CLI для Kaiten API
 Команды для поиска:
   find <tag_name> [-m] [--board=<id|name>]  - Поиск по метке (-m = минимальный JSON, --board = фильтр по ID или названию доски)
 
+Команды для Git:
+  git-branch <card_id>             - Создать ветку для задачи
+  git-checkout <card_id>           - Переключиться на ветку задачи
+  git-commit <card_id> [msg]       - Закоммитить изменения (msg по умолчанию: "Work in progress")
+  git-status                     - Показать статус git
+  git-push <card_id>              - Запушить ветку
+
 Флаги оптимизации:
   --minimal, -m                  - Минимальный JSON (без отступов, короткие ключи)
+  --board=<id|name>             - Фильтр по доске (ID или название)
 
 Примеры:
   kaiten cards
   kaiten create '{"title":"Новая задача","boardId":123,"columnId":456}'
   kaiten move 789 456
   kaiten comment add 789 "Текст комментария"
+  kaiten git-branch 45791547
         `);
         break;
 

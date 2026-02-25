@@ -70,6 +70,7 @@ export function getConfig() {
   return {
     apiUrl: config.KAITEN_API_URL,
     apiToken: config.KAITEN_API_TOKEN,
-    defaultSpaceId: config.KAITEN_DEFAULT_SPACE_ID
+    defaultSpaceId: config.KAITEN_DEFAULT_SPACE_ID ? parseInt(config.KAITEN_DEFAULT_SPACE_ID) : null,
+    defaultBoardId: config.KAITEN_DEFAULT_BOARD_ID ? parseInt(config.KAITEN_DEFAULT_BOARD_ID) : null
   };
 }

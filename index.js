@@ -285,7 +285,7 @@ async function main() {
             if (!isNaN(boardValue)) {
               boardId = parseInt(boardValue);
             } else {
-              boardId = await sdk.getBoardId(boardValue);
+              boardId = await sdk.getBoardId(config.defaultSpaceId, boardValue);
             }
             foundCards = await sdk.getCards(null, boardId);
             foundCards = foundCards.filter(card => {
@@ -306,7 +306,7 @@ async function main() {
         }
         break;
 
-      case 'git-branch':
+      case 'git-branch': {
         const gitCardId = args[1];
         if (!gitCardId) {
           console.error('Error: Card ID required');
@@ -317,20 +317,22 @@ async function main() {
         console.log(`Created branch: ${branchName}`);
         console.log(`Card: ${card.title} (${gitCardId})`);
         break;
+      }
 
-      case 'git-checkout':
+      case 'git-checkout': {
         const checkoutCardId = args[1];
         if (!checkoutCardId) {
           console.error('Error: Card ID required');
           process.exit(1);
         }
-        const card = await sdk.getCard(checkoutCardId);
-        const branchName = await sdk.checkoutGitBranch(checkoutCardId, card.title);
+        const checkoutCard = await sdk.getCard(checkoutCardId);
+        const branchName = await sdk.checkoutGitBranch(checkoutCardId, checkoutCard.title);
         console.log(`Checked out to: ${branchName}`);
-        console.log(`Card: ${card.title} (${checkoutCardId})`);
+        console.log(`Card: ${checkoutCard.title} (${checkoutCardId})`);
         break;
+      }
 
-      case 'git-commit':
+      case 'git-commit': {
         const commitCardId = args[1];
         const commitMessage = args[2] || 'Work in progress';
         if (!commitCardId) {
@@ -341,22 +343,25 @@ async function main() {
         const result = await sdk.commitGit(commitCardId, commitMessage);
         console.log(`[${commitCardId}] ${commitMessage}`);
         break;
+      }
 
-      case 'git-status':
+      case 'git-status': {
         const status = await sdk.getGitStatus();
         console.log(status);
         break;
+      }
 
-      case 'git-push':
+      case 'git-push': {
         const pushCardId = args[1];
         if (!pushCardId) {
           console.error('Error: Card ID required');
           process.exit(1);
         }
-        const card = await sdk.getCard(pushCardId);
-        const currentBranch = await sdk.gitPush(pushCardId, card.title);
+        const pushCard = await sdk.getCard(pushCardId);
+        const currentBranch = await sdk.gitPush(pushCardId, pushCard.title);
         console.log(`Pushed branch: ${currentBranch}`);
         break;
+      }
 
       case 'help':
       case '--help':

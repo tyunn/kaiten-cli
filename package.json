@@ -1,8 +1,8 @@
 {
-  "name": "kaiten-cli",
+  "name": "kaiten-mcp",
   "version": "2.0.0",
-  "description": "CLI tool and SDK for Kaiten API - optimized data and full card management",
-  "main": "src/sdk.js",
+  "description": "MCP Server and CLI tool for Kaiten API - optimized data and full card management",
+  "main": "mcp-server.js",
   "bin": {
     "kaiten": "./index.js"
   },
@@ -13,12 +13,14 @@
   },
   "scripts": {
     "start": "node index.js",
+    "mcp": "node mcp-server.js",
     "test": "node index.js help"
   },
   "keywords": [
     "kaiten",
     "cli",
     "api",
+    "mcp",
     "project-management",
     "sdk",
     "task-management"
@@ -30,6 +32,7 @@
   },
   "files": [
     "src/",
-    "index.js"
+    "index.js",
+    "mcp-server.js"
   ]
 }

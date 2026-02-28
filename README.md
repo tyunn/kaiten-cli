@@ -322,12 +322,14 @@ src/
   "mcpServers": {
     "kaiten": {
       "command": "node",
-      "args": ["/путь/к/kaiten-mcp/index.js"],
+      "args": ["/путь/к/kaiten-mcp/mcp-server.js"],
       "cwd": "/путь/к/вашему/проекту"
     }
   }
 }
 ```
+
+**Важно**: Используйте `mcp-server.js` для MCP сервера, а не `index.js` (это CLI инструмент).
 
 #### Где находятся файлы конфигурации
 
@@ -390,7 +392,7 @@ KAITEN_API_TOKEN=ваш_api_токен
   "mcpServers": {
     "kaiten": {
       "command": "node",
-      "args": ["/путь/к/kaiten-cli/index.js"],
+      "args": ["/путь/к/kaiten-mcp/mcp-server.js"],
       "cwd": "/путь/к/вашему/проекту"
     }
   }

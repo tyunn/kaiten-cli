@@ -71,6 +71,8 @@ export function getConfig() {
     apiUrl: config.KAITEN_API_URL,
     apiToken: config.KAITEN_API_TOKEN,
     defaultSpaceId: config.KAITEN_DEFAULT_SPACE_ID ? parseInt(config.KAITEN_DEFAULT_SPACE_ID) : null,
-    defaultBoardId: config.KAITEN_DEFAULT_BOARD_ID ? parseInt(config.KAITEN_DEFAULT_BOARD_ID) : null
+    defaultBoardId: config.KAITEN_DEFAULT_BOARD_ID ? parseInt(config.KAITEN_DEFAULT_BOARD_ID) : null,
+    allowedSpaceIds: config.KAITEN_ALLOWED_SPACE_IDS ? config.KAITEN_ALLOWED_SPACE_IDS.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id)) : null,
+    allowedBoardIds: config.KAITEN_ALLOWED_BOARD_IDS ? config.KAITEN_ALLOWED_BOARD_IDS.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id)) : null
   };
 }

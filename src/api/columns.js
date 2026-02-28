@@ -1,5 +1,15 @@
 import { api } from './client.js';
 
+export async function getSpaces() {
+  const response = await api.get('/spaces');
+  return response.data;
+}
+
+export async function getSpace(spaceId) {
+  const response = await api.get(`/spaces/${spaceId}`);
+  return response.data;
+}
+
 export async function getColumns(boardId) {
   const response = await api.get(`/boards/${boardId}/columns`);
   return response.data;

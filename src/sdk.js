@@ -11,16 +11,65 @@ export class KaitenSDK {
     }
   }
 
+  _validateSpaceId(spaceId) {
+    if (!this.config.allowedSpaceIds || !spaceId) return true;
+    if (!this.config.allowedSpaceIds.includes(spaceId)) {
+      throw new Error(`Space ID ${spaceId} is not in allowed list`);
+    }
+    return true;
+  }
+
+  _validateBoardId(boardId) {
+    if (!this.config.allowedBoardIds || !boardId) return true;
+    if (!this.config.allowedBoardIds.includes(boardId)) {
+      throw new Error(`Board ID ${boardId} is not in allowed list`);
+    }
+    return true;
+  }
+
+  async _validateCardId(cardId) {
+    if (!this.config.allowedBoardIds || !cardId) return true;
+    try {
+      const card = await api.getCard(cardId);
+      if (card?.board_id && !this.config.allowedBoardIds.includes(card.board_id)) {
+        throw new Error(`Card ${cardId} belongs to board ${card.board_id} which is not in allowed list`);
+      }
+    } catch (error) {
+      if (error.message.includes('not in allowed list')) {
+        throw error;
+      }
+    }
+    return true;
+  }
+
   getCards(spaceId = null, boardId = null) {
     const id = spaceId || this.config.defaultSpaceId;
+    this._validateSpaceId(id);
     if (boardId) {
+      this._validateBoardId(boardId);
       return api.getCards(id, boardId);
     }
     return api.getCards(id);
   }
 
+  async getSpaces() {
+    const spaces = await api.getSpaces();
+    if (!this.config.allowedSpaceIds) return spaces;
+    return spaces.filter(s => this.config.allowedSpaceIds.includes(s.id));
+  }
+
+  async getSpaceId(spaceTitle) {
+    const spaces = await api.getSpaces();
+    const space = spaces.find(s => s.title === spaceTitle || s.id === spaceTitle);
+    if (!space) {
+      throw new Error(`Space "${spaceTitle}" not found`);
+    }
+    return space.id;
+  }
+
   async getBoardId(boardTitle, spaceId = null) {
     const id = spaceId || this.config.defaultSpaceId;
+    this._validateSpaceId(id);
     const boards = await api.getBoards(id);
     const board = boards.find(b => b.title === boardTitle || b.id === boardTitle);
     if (!board) {
@@ -29,11 +78,13 @@ export class KaitenSDK {
     return board.id;
   }
 
-  getCard(cardId) {
+  async getCard(cardId) {
+    await this._validateCardId(cardId);
     return api.getCard(cardId);
   }
 
   async createCard({ title, description, boardId, columnId, laneId, tags, size, plannedStart, plannedEnd, parentId = null }) {
+    this._validateBoardId(boardId);
     const data = {
       title,
       board_id: boardId,
@@ -51,43 +102,53 @@ export class KaitenSDK {
     return api.createCard(data);
   }
 
-  updateCard(cardId, data) {
+  async updateCard(cardId, data) {
+    await this._validateCardId(cardId);
     return api.updateCard(cardId, data);
   }
 
-  deleteCard(cardId) {
+  async deleteCard(cardId) {
+    await this._validateCardId(cardId);
     return api.deleteCard(cardId);
   }
 
-  moveToColumn(cardId, columnId, laneId = null) {
+  async moveToColumn(cardId, columnId, laneId = null) {
+    await this._validateCardId(cardId);
     return api.moveCard(cardId, columnId, laneId);
   }
 
-  assignTo(cardId, userId) {
+  async assignTo(cardId, userId) {
+    await this._validateCardId(cardId);
     return api.assignCard(cardId, userId);
   }
 
-  unassignFrom(cardId, userId) {
+  async unassignFrom(cardId, userId) {
+    await this._validateCardId(cardId);
     return api.unassignCard(cardId, userId);
   }
 
-  archive(cardId) {
+  async archive(cardId) {
+    await this._validateCardId(cardId);
     return api.archiveCard(cardId);
   }
 
-  unarchive(cardId) {
+  async unarchive(cardId) {
+    await this._validateCardId(cardId);
     return api.unarchiveCard(cardId);
   }
 
-  addTag(cardId, tagName) {
+  async addTag(cardId, tagName) {
+    await this._validateCardId(cardId);
     return api.addTag(cardId, tagName);
   }
 
-  removeTag(cardId, tagName) {
+  async removeTag(cardId, tagName) {
+    await this._validateCardId(cardId);
     return api.removeTag(cardId, tagName);
   }
 
-  setTags(cardId, tagNames) {
+  async setTags(cardId, tagNames) {
+    await this._validateCardId(cardId);
     return api.setTags(cardId, tagNames);
   }
 
@@ -110,10 +171,12 @@ export class KaitenSDK {
   }
 
   async createSubtask(parentId, title, position = 0) {
+    await this._validateCardId(parentId);
     return api.createSubtask(parentId, title, position);
   }
 
-  getSubtasks(cardId) {
+  async getSubtasks(cardId) {
+    await this._validateCardId(cardId);
     return api.getSubtasks(cardId);
   }
 
@@ -141,10 +204,12 @@ export class KaitenSDK {
   }
 
   async addComment(cardId, text, parentId = null) {
+    await this._validateCardId(cardId);
     return api.createComment(cardId, text, parentId);
   }
 
-  getComments(cardId) {
+  async getComments(cardId) {
+    await this._validateCardId(cardId);
     return api.getComments(cardId);
   }
 
@@ -166,6 +231,7 @@ export class KaitenSDK {
   }
 
   async getColumnId(boardId, columnTitle) {
+    this._validateBoardId(boardId);
     const columns = await api.getColumns(boardId);
     const column = columns.find(c => c.title === columnTitle);
     if (!column) {
@@ -188,10 +254,15 @@ export class KaitenSDK {
 
   getBoards(spaceId = null) {
     const id = spaceId || this.config.defaultSpaceId;
+    if (!id) {
+      throw new Error('Space ID is required. Set KAITEN_DEFAULT_SPACE_ID or pass spaceId parameter.');
+    }
+    this._validateSpaceId(id);
     return api.getBoards(id);
   }
 
   getColumns(boardId) {
+    this._validateBoardId(boardId);
     return api.getColumns(boardId);
   }
 

@@ -311,7 +311,11 @@ src/
 
 ### Настройка MCP server
 
-Для интеграции с Claude Code или другими AI-ассистентами добавьте в конфиг:
+Добавьте сервер Kaiten MCP в конфигурацию вашего AI-ассистента.
+
+#### Конфигурация
+
+В файл конфигурации добавьте:
 
 ```json
 {
@@ -324,6 +328,52 @@ src/
   }
 }
 ```
+
+#### Где находятся файлы конфигурации
+
+**Claude Code Desktop:**
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- Linux: `~/.config/Claude/claude_desktop_config.json`
+
+**Claude Code (проектный конфиг):**
+- `<ваш-проект>/.claude/settings.json`
+
+**Cursor:**
+- Проектный: `<ваш-проект>/.cursor/mcp.json`
+- Глобальный: `~/.cursor/mcp.json`
+
+**Continue.dev:**
+- Проектный: `<ваш-проект>/.continue/config.json`
+- Глобальный: `~/.continue/config.json`
+
+#### Настройка проекта
+
+В директории вашего проекта создайте файл конфигурации Kaiten:
+
+**Файл `.kaiten.env` в корне проекта:**
+```env
+# Kaiten project configuration
+KAITEN_DEFAULT_SPACE_ID=12345
+KAITEN_DEFAULT_BOARD_ID=67890
+
+# Опционально: ограничение доступа для безопасности
+KAITEN_ALLOWED_SPACE_IDS=12345
+KAITEN_ALLOWED_BOARD_IDS=67890
+```
+
+**Глобальный файл `~/.kaiten/config`:**
+```env
+# Обязательные параметры
+KAITEN_API_URL=https://ваш-домен.kaiten.ru/api/latest
+KAITEN_API_TOKEN=ваш_api_токен
+```
+
+#### Важные моменты
+
+- Параметр `cwd` в конфигурации MCP определяет директорию проекта для поиска `.kaiten.env`
+- Без `cwd` будут использоваться только глобальные настройки из `~/.kaiten/config`
+- Параметры доступа (`KAITEN_ALLOWED_*`) работают только если указаны в `.kaiten.env` проекта
 
 ### Инструкции для AI assistants
 

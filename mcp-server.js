@@ -183,7 +183,7 @@ class MCPServer {
       },
       {
         name: 'kaiten_find_cards',
-        description: 'Find cards by tag (token optimized)',
+        description: 'Find cards by tag (token optimized - returns only id, title, board_id, column_id, tags)',
         inputSchema: {
           type: 'object',
           properties: {
@@ -194,10 +194,6 @@ class MCPServer {
             boardId: {
               type: 'number',
               description: 'Board ID (optional)'
-            },
-            minimal: {
-              type: 'boolean',
-              description: 'Return minimal JSON format'
             }
           },
           required: ['tagName']
@@ -435,11 +431,17 @@ class MCPServer {
           return await sdk.assignTo(args.cardId, args.userId);
 
         case 'kaiten_find_cards':
-          const cards = await sdk.getCards(null, args.boardId);
-          const filtered = cards.filter(c => 
+          const findCards = await sdk.getCards(null, args.boardId);
+          const findFiltered = findCards.filter(c => 
             c.tags?.some(t => t.name === args.tagName)
           );
-          return filtered;
+          return findFiltered.map(c => ({
+            id: c.id,
+            title: c.title,
+            board_id: c.board_id,
+            column_id: c.column_id,
+            tags: c.tags
+          }));
 
         case 'kaiten_add_comment':
           return await sdk.addComment(args.cardId, args.text);

@@ -3,6 +3,10 @@ node_modules/
 
 # Environment variables
 .env
+.kaiten.env
+
+# Claude settings (local project settings)
+.claude/
 
 # Logs
 *.log

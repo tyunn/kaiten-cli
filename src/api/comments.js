@@ -11,7 +11,7 @@ export async function getComment(commentId) {
 }
 
 export async function createComment(cardId, text, parentId = null) {
-  const response = await api.post('/comments', {
+  const response = await api.post(`/cards/${cardId}/comments`, {
     card_id: cardId,
     text,
     parent_id: parentId

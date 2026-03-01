@@ -279,7 +279,8 @@ export class KaitenSDK {
     if (!isRepo) {
       throw new Error('Not a git repository');
     }
-    return gitApi.createBranch(cardId, title);
+    const cardTitle = title || (await api.getCard(cardId)).title;
+    return gitApi.createBranch(cardId, cardTitle);
   }
 
   async checkoutGitBranch(cardId, title) {
@@ -287,7 +288,8 @@ export class KaitenSDK {
     if (!isRepo) {
       throw new Error('Not a git repository');
     }
-    return gitApi.checkoutBranch(cardId, title);
+    const cardTitle = title || (await api.getCard(cardId)).title;
+    return gitApi.checkoutBranch(cardId, cardTitle);
   }
 
   async commitGit(cardId, message) {

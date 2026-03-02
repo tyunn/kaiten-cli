@@ -25,7 +25,8 @@ export async function updateCard(cardId, data) {
 }
 
 export async function deleteCard(cardId) {
-  await api.delete(`/cards/${cardId}`);
+  const response = await api.delete(`/cards/${cardId}`);
+  return response.data;
 }
 
 export async function moveCard(cardId, columnId, laneId = null) {

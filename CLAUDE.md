@@ -22,6 +22,8 @@ kaiten delete <id>                     # Удалить
 kaiten move <id> <column_id>           # Переместить
 kaiten assign <id> <user_id>           # Назначить исполнителя
 kaiten subtask create <parent> <title> # Создать подзадачу
+kaiten subtask attach <card> <parent> # Привязать к родителю
+kaiten subtask detach <card>           # Отвязать от родителя
 kaiten comment add <card_id> <text>    # Добавить комментарий
 kaiten board [space_id]                # Список досок
 kaiten column <board_id>               # Список колонок
@@ -55,6 +57,19 @@ await sdk.createTaskFlow(parentCardId, [
   { title: 'Подзадача 1', description: '...' },
   { title: 'Подзадача 2', description: '...' }
 ]);
+
+// Получить подзадачи карточки
+const subtasks = await sdk.getSubtasks(cardId);
+const allSubtasks = await sdk.getAllSubtasks(cardId);
+
+// Получить родительскую карточку
+const parent = await sdk.getParent(cardId);
+
+// Привязать карточку к родительской
+await sdk.attachToParent(cardId, parentId, 0);
+
+// Отвязать карточку от родительской
+await sdk.detachFromParent(cardId);
 
 // Переместить карточку
 await sdk.moveToColumn(cardId, columnId);

@@ -180,6 +180,27 @@ export class KaitenSDK {
     return api.getSubtasks(cardId);
   }
 
+  async getAllSubtasks(cardId) {
+    await this._validateCardId(cardId);
+    return api.getAllSubtasks(cardId);
+  }
+
+  async getParent(cardId) {
+    await this._validateCardId(cardId);
+    return api.getParent(cardId);
+  }
+
+  async attachToParent(cardId, parentId, position = 0) {
+    await this._validateCardId(cardId);
+    await this._validateCardId(parentId);
+    return api.attachToParent(cardId, parentId, position);
+  }
+
+  async detachFromParent(cardId) {
+    await this._validateCardId(cardId);
+    return api.detachFromParent(cardId);
+  }
+
   async createTaskFlow(parentCard, tasks) {
     const createdTasks = [];
     

@@ -264,6 +264,70 @@ class MCPServer {
         }
       },
       {
+        name: 'kaiten_get_all_subtasks',
+        description: 'Get all subtasks for card (including nested)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            cardId: {
+              type: 'number',
+              description: 'Card ID'
+            }
+          },
+          required: ['cardId']
+        }
+      },
+      {
+        name: 'kaiten_get_parent',
+        description: 'Get parent card',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            cardId: {
+              type: 'number',
+              description: 'Card ID'
+            }
+          },
+          required: ['cardId']
+        }
+      },
+      {
+        name: 'kaiten_attach_to_parent',
+        description: 'Attach existing card to parent',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            cardId: {
+              type: 'number',
+              description: 'Card ID to attach'
+            },
+            parentId: {
+              type: 'number',
+              description: 'Parent card ID'
+            },
+            position: {
+              type: 'number',
+              description: 'Position (optional, default 0)'
+            }
+          },
+          required: ['cardId', 'parentId']
+        }
+      },
+      {
+        name: 'kaiten_detach_from_parent',
+        description: 'Detach card from parent',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            cardId: {
+              type: 'number',
+              description: 'Card ID'
+            }
+          },
+          required: ['cardId']
+        }
+      },
+      {
         name: 'kaiten_add_tag',
         description: 'Add tag to card',
         inputSchema: {
@@ -454,6 +518,18 @@ class MCPServer {
 
         case 'kaiten_get_subtasks':
           return await sdk.getSubtasks(args.cardId);
+
+        case 'kaiten_get_all_subtasks':
+          return await sdk.getAllSubtasks(args.cardId);
+
+        case 'kaiten_get_parent':
+          return await sdk.getParent(args.cardId);
+
+        case 'kaiten_attach_to_parent':
+          return await sdk.attachToParent(args.cardId, args.parentId, args.position);
+
+        case 'kaiten_detach_from_parent':
+          return await sdk.detachFromParent(args.cardId);
 
         case 'kaiten_add_tag':
           return await sdk.addTag(args.cardId, args.tagName);

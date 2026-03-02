@@ -139,12 +139,14 @@ export class KaitenSDK {
 
   async addTag(cardId, tagName) {
     await this._validateCardId(cardId);
-    return api.addTag(cardId, tagName);
+    await api.addTag(cardId, tagName);
+    return { success: true, cardId, tagName };
   }
 
   async removeTag(cardId, tagName) {
     await this._validateCardId(cardId);
-    return api.removeTag(cardId, tagName);
+    await api.removeTag(cardId, tagName);
+    return { success: true, cardId, tagName };
   }
 
   async setTags(cardId, tagNames) {

@@ -517,13 +517,13 @@ class MCPServer {
           return await sdk.createSubtask(args.parentId, args.title);
 
         case 'kaiten_get_subtasks':
-          return await sdk.getSubtasks(args.cardId);
+          return await sdk.getSubtasks(args.cardId, true);
 
         case 'kaiten_get_all_subtasks':
-          return await sdk.getAllSubtasks(args.cardId);
+          return await sdk.getAllSubtasks(args.cardId, true);
 
         case 'kaiten_get_parent':
-          return await sdk.getParent(args.cardId);
+          return await sdk.getParent(args.cardId, true);
 
         case 'kaiten_attach_to_parent':
           return await sdk.attachToParent(args.cardId, args.parentId, args.position);

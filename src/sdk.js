@@ -175,19 +175,53 @@ export class KaitenSDK {
     return api.createSubtask(parentId, title, position);
   }
 
-  async getSubtasks(cardId) {
+  async getSubtasks(cardId, minimal = false) {
     await this._validateCardId(cardId);
-    return api.getSubtasks(cardId);
+    const subtasks = await api.getSubtasks(cardId);
+    if (minimal) {
+      return subtasks.map(c => ({
+        id: c.id,
+        title: c.title,
+        board_id: c.board_id,
+        column_id: c.column_id,
+        condition: c.condition,
+        parents_count: c.parents_count,
+        children_count: c.children_count
+      }));
+    }
+    return subtasks;
   }
 
-  async getAllSubtasks(cardId) {
+  async getAllSubtasks(cardId, minimal = false) {
     await this._validateCardId(cardId);
-    return api.getAllSubtasks(cardId);
+    const subtasks = await api.getAllSubtasks(cardId);
+    if (minimal) {
+      return subtasks.map(c => ({
+        id: c.id,
+        title: c.title,
+        board_id: c.board_id,
+        column_id: c.column_id,
+        condition: c.condition,
+        parents_count: c.parents_count,
+        children_count: c.children_count
+      }));
+    }
+    return subtasks;
   }
 
-  async getParent(cardId) {
+  async getParent(cardId, minimal = false) {
     await this._validateCardId(cardId);
-    return api.getParent(cardId);
+    const parent = await api.getParent(cardId);
+    if (minimal && parent) {
+      return {
+        id: parent.id,
+        title: parent.title,
+        board_id: parent.board_id,
+        column_id: parent.column_id,
+        condition: parent.condition
+      };
+    }
+    return parent;
   }
 
   async attachToParent(cardId, parentId, position = 0) {

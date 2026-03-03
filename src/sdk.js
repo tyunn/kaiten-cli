@@ -78,9 +78,23 @@ export class KaitenSDK {
     return board.id;
   }
 
-  async getCard(cardId) {
+  async getCard(cardId, minimal = false) {
     await this._validateCardId(cardId);
-    return api.getCard(cardId);
+    const card = await api.getCard(cardId);
+    if (minimal) {
+      return {
+        id: card.id,
+        title: card.title,
+        description: card.description,
+        board_id: card.board_id,
+        column_id: card.column_id,
+        condition: card.condition,
+        tags: card.tags,
+        parents_count: card.parents_count,
+        children_count: card.children_count
+      };
+    }
+    return card;
   }
 
   async createCard({ title, description, boardId, columnId, laneId, tags, size, plannedStart, plannedEnd, parentId = null }) {
@@ -114,12 +128,14 @@ export class KaitenSDK {
 
   async moveToColumn(cardId, columnId, laneId = null) {
     await this._validateCardId(cardId);
-    return api.moveCard(cardId, columnId, laneId);
+    await api.moveCard(cardId, columnId, laneId);
+    return { success: true, cardId, columnId, laneId };
   }
 
   async assignTo(cardId, userId) {
     await this._validateCardId(cardId);
-    return api.assignCard(cardId, userId);
+    await api.assignCard(cardId, userId);
+    return { success: true, cardId, userId };
   }
 
   async unassignFrom(cardId, userId) {
@@ -139,14 +155,32 @@ export class KaitenSDK {
 
   async addTag(cardId, tagName) {
     await this._validateCardId(cardId);
-    await api.addTag(cardId, tagName);
-    return { success: true, cardId, tagName };
+    const tag = await api.addTag(cardId, tagName);
+    const card = await api.getCard(cardId);
+    return {
+      id: card.id,
+      title: card.title,
+      description: card.description,
+      board_id: card.board_id,
+      column_id: card.column_id,
+      condition: card.condition,
+      tags: card.tags
+    };
   }
 
   async removeTag(cardId, tagName) {
     await this._validateCardId(cardId);
     await api.removeTag(cardId, tagName);
-    return { success: true, cardId, tagName };
+    const card = await api.getCard(cardId);
+    return {
+      id: card.id,
+      title: card.title,
+      description: card.description,
+      board_id: card.board_id,
+      column_id: card.column_id,
+      condition: card.condition,
+      tags: card.tags
+    };
   }
 
   async setTags(cardId, tagNames) {

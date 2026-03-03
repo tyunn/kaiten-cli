@@ -65,16 +65,17 @@ export async function unarchiveCard(cardId) {
 }
 
 export async function addTag(cardId, tagName) {
-  const response = await api.patch(`/cards/${cardId}`, {
-    tags: [{ name: tagName }]
-  });
+  const response = await api.post(`/cards/${cardId}/tags`, { name: tagName });
   return response.data;
 }
 
 export async function removeTag(cardId, tagName) {
-  const response = await api.patch(`/cards/${cardId}`, {
-    tags_remove: [tagName]
-  });
+  const card = await getCard(cardId);
+  const tag = card.tags?.find(t => t.name === tagName);
+  if (!tag) {
+    throw new Error(`Tag "${tagName}" not found on card`);
+  }
+  const response = await api.delete(`/cards/${cardId}/tags/${tag.id}`);
   return response.data;
 }
 

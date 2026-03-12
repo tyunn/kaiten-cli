@@ -562,6 +562,15 @@ class MCPServer {
           throw new Error(`Unknown tool: ${toolName}`);
       }
     } catch (error) {
+      // Include detailed error information for axios errors
+      if (error.cause && error.cause.response) {
+        const { status, data } = error.cause.response;
+        let errorMsg = `Tool ${toolName} failed: ${error.message} (HTTP ${status})`;
+        if (data) {
+          errorMsg += ` - ${JSON.stringify(data)}`;
+        }
+        throw new Error(errorMsg);
+      }
       throw new Error(`Tool ${toolName} failed: ${error.message}`);
     }
   }

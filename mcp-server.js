@@ -472,7 +472,7 @@ class MCPServer {
           return await sdk.getCards(args.spaceId, args.boardId);
 
         case 'kaiten_card':
-          return await sdk.getCard(args.cardId);
+          return await sdk.getCard(args.cardId, args.simple || true);
 
         case 'kaiten_create_card':
           return await sdk.createCard({

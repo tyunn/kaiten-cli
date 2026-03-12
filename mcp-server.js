@@ -5,6 +5,50 @@ import { getConfig } from './src/utils/config.js';
 
 const sdk = createSDK();
 
+// Simple logging
+let logLevel = 'info';
+
+try {
+  const config = getConfig();
+  if (config.logLevel) {
+    logLevel = config.logLevel;
+  }
+} catch (e) {
+  // Use default log level
+}
+
+const LOG_LEVELS = { error: 0, warn: 1, info: 2, debug: 3 };
+
+function shouldLog(level) {
+  return LOG_LEVELS[level] <= LOG_LEVELS[logLevel];
+}
+
+function log(level, message, data) {
+  if (shouldLog(level)) {
+    const timestamp = new Date().toISOString();
+    const msg = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+    if (data !== undefined) {
+      console[level](msg, typeof data === 'string' ? data : JSON.stringify(data));
+    } else {
+      console[level](msg);
+    }
+  }
+}
+
+function errorLog(message, data) {
+  log('error', message, data);
+}
+
+function infoLog(message, data) {
+  log('info', message, data);
+}
+
+function debugLog(message, data) {
+  log('debug', message, data);
+}
+
+console.log(`MCP Server starting with log level: ${logLevel}`);
+
 class MCPServer {
   constructor() {
     this.requestId = 0;
@@ -457,6 +501,7 @@ class MCPServer {
   }
 
   async handleToolCall(toolName, args) {
+    debugLog(`Tool called: ${toolName}`, args);
     try {
       switch (toolName) {
         case 'kaiten_spaces':
@@ -569,8 +614,10 @@ class MCPServer {
         if (data) {
           errorMsg += ` - ${JSON.stringify(data)}`;
         }
+        errorLog('Tool error:', { toolName, message: error.message, httpStatus: status, responseData: data });
         throw new Error(errorMsg);
       }
+      errorLog('Tool error:', { toolName, message: error.message });
       throw new Error(`Tool ${toolName} failed: ${error.message}`);
     }
   }

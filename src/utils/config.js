@@ -73,6 +73,7 @@ export function getConfig() {
     defaultSpaceId: config.KAITEN_DEFAULT_SPACE_ID ? parseInt(config.KAITEN_DEFAULT_SPACE_ID) : null,
     defaultBoardId: config.KAITEN_DEFAULT_BOARD_ID ? parseInt(config.KAITEN_DEFAULT_BOARD_ID) : null,
     allowedSpaceIds: config.KAITEN_ALLOWED_SPACE_IDS ? config.KAITEN_ALLOWED_SPACE_IDS.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id)) : null,
-    allowedBoardIds: config.KAITEN_ALLOWED_BOARD_IDS ? config.KAITEN_ALLOWED_BOARD_IDS.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id)) : null
+    allowedBoardIds: config.KAITEN_ALLOWED_BOARD_IDS ? config.KAITEN_ALLOWED_BOARD_IDS.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id)) : null,
+    logLevel: config.KAITEN_LOG_LEVEL || 'info'
   };
 }

@@ -133,21 +133,21 @@ class MCPServer {
       },
       {
         name: 'kaiten_create_card',
-        description: 'Create a new card',
+        description: 'Create a new independent card on a board. Use this for creating separate tasks, not child cards/subtasks.',
         inputSchema: {
           type: 'object',
           properties: {
             title: {
               type: 'string',
-              description: 'Card title'
+              description: 'Card title - for an independent task on a board'
             },
             boardId: {
               type: 'number',
-              description: 'Board ID'
+              description: 'Board ID where to create the independent card'
             },
             columnId: {
               type: 'number',
-              description: 'Column ID'
+              description: 'Column ID where to place the independent card'
             },
             description: {
               type: 'string',
@@ -276,46 +276,46 @@ class MCPServer {
         }
       },
       {
-        name: 'kaiten_create_subtask',
-        description: 'Create subtask',
+        name: 'kaiten_create_child_card',
+        description: 'Create a child card under a parent card. Use this when you need to create a nested task, subtask, or child card with a parent_card_id.',
         inputSchema: {
           type: 'object',
           properties: {
             parentId: {
               type: 'number',
-              description: 'Parent card ID'
+              description: 'Parent card ID (also called parent_card_id) - the card under which to create the child card'
             },
             title: {
               type: 'string',
-              description: 'Subtask title'
+              description: 'Child card title'
             }
           },
           required: ['parentId', 'title']
         }
       },
       {
-        name: 'kaiten_get_subtasks',
-        description: 'Get subtasks for card',
+        name: 'kaiten_get_child_cards',
+        description: 'Get immediate child cards of a parent card (one level only)',
         inputSchema: {
           type: 'object',
           properties: {
             cardId: {
               type: 'number',
-              description: 'Card ID'
+              description: 'Parent card ID'
             }
           },
           required: ['cardId']
         }
       },
       {
-        name: 'kaiten_get_all_subtasks',
-        description: 'Get all subtasks for card (including nested)',
+        name: 'kaiten_get_all_child_cards',
+        description: 'Get all child cards of a parent card recursively (includes nested child cards at all levels)',
         inputSchema: {
           type: 'object',
           properties: {
             cardId: {
               type: 'number',
-              description: 'Card ID'
+              description: 'Parent card ID'
             }
           },
           required: ['cardId']
@@ -323,7 +323,7 @@ class MCPServer {
       },
       {
         name: 'kaiten_get_parent',
-        description: 'Get parent card',
+        description: 'Get the parent card of a child card/subtask',
         inputSchema: {
           type: 'object',
           properties: {
@@ -337,21 +337,21 @@ class MCPServer {
       },
       {
         name: 'kaiten_attach_to_parent',
-        description: 'Attach existing card to parent',
+        description: 'Link an existing card as a child/subtask under a parent card. Use this when you already have a card that needs to become a subtask of another card.',
         inputSchema: {
           type: 'object',
           properties: {
             cardId: {
               type: 'number',
-              description: 'Card ID to attach'
+              description: 'Card ID to attach (the child/subtask card)'
             },
             parentId: {
               type: 'number',
-              description: 'Parent card ID'
+              description: 'Parent card ID (the parent_task card)'
             },
             position: {
               type: 'number',
-              description: 'Position (optional, default 0)'
+              description: 'Position in parent children list (optional, default 0)'
             }
           },
           required: ['cardId', 'parentId']
@@ -359,7 +359,7 @@ class MCPServer {
       },
       {
         name: 'kaiten_detach_from_parent',
-        description: 'Detach card from parent',
+        description: 'Remove parent-child relationship - makes a subtask/child card into an independent card',
         inputSchema: {
           type: 'object',
           properties: {
@@ -558,13 +558,13 @@ class MCPServer {
         case 'kaiten_get_comments':
           return await sdk.getComments(args.cardId);
 
-        case 'kaiten_create_subtask':
+        case 'kaiten_create_child_card':
           return await sdk.createSubtask(args.parentId, args.title);
 
-        case 'kaiten_get_subtasks':
+        case 'kaiten_get_child_cards':
           return await sdk.getSubtasks(args.cardId, true);
 
-        case 'kaiten_get_all_subtasks':
+        case 'kaiten_get_all_child_cards':
           return await sdk.getAllSubtasks(args.cardId, true);
 
         case 'kaiten_get_parent':

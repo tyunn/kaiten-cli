@@ -1,4 +1,5 @@
 import { api } from './client.js';
+import { getColumns } from './columns.js';
 
 export async function getCards(spaceId, boardId = null) {
   let url = `/spaces/${spaceId}/cards`;
@@ -30,6 +31,32 @@ export async function deleteCard(cardId) {
 }
 
 export async function moveCard(cardId, columnId, laneId = null) {
+  // Валидация: проверяем, что карточка существует и получаем её board_id
+  let card;
+  try {
+    card = await getCard(cardId);
+  } catch (error) {
+    throw new Error(`Card with ID ${cardId} not found`);
+  }
+
+  // Валидация: проверяем, что колонка существует на той же доске
+  // Получаем все колонки доски карточки
+  let columns;
+  try {
+    columns = await getColumns(card.board_id);
+  } catch (error) {
+    throw new Error(`Failed to get columns for board ${card.board_id}`);
+  }
+
+  // Проверяем, что колонка с указанным ID существует на этой доске
+  const targetColumn = columns.find(c => c.id === columnId);
+  if (!targetColumn) {
+    throw new Error(
+      `Column with ID ${columnId} not found on board ${card.board_id}. ` +
+      `Available columns on this board: ${columns.map(c => `${c.id} (${c.title})`).join(', ')}`
+    );
+  }
+
   const data = { column_id: columnId };
   if (laneId) data.lane_id = laneId;
   const response = await api.patch(`/cards/${cardId}`, data);

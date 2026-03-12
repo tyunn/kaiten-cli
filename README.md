@@ -607,10 +607,10 @@ sdk.getCardsWithTag('agent-safe').then(cards => {
 - `kaiten_move_card` с параметрами `cardId, columnId` - Переместить карточку
 - `kaiten_assign_card` с параметрами `cardId, userId` - Назначить исполнителя
 
-**Подзадачи и комментарии:**
-- `kaiten_create_subtask` с параметрами `parentId, title` - Создать подзадачу
-- `kaiten_get_subtasks` с параметром `cardId` - Список подзадач
-- `kaiten_get_all_subtasks` с параметром `cardId` - Список всех подзадач (включая вложенные)
+**Дочерние карточки и комментарии:**
+- `kaiten_create_child_card` с параметрами `parentId, title` - Создать дочернюю карточку
+- `kaiten_get_child_cards` с параметром `cardId` - Список дочерних карточек
+- `kaiten_get_all_child_cards` с параметром `cardId` - Список всех дочерних карточек (включая вложенные)
 - `kaiten_get_parent` с параметром `cardId` - Получить родительскую карточку
 - `kaiten_attach_to_parent` с параметрами `cardId, parentId, position` - Привязать карточку к родителю
 - `kaiten_detach_from_parent` с параметром `cardId` - Отвязать карточку от родителя

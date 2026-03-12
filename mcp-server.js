@@ -277,13 +277,13 @@ class MCPServer {
       },
       {
         name: 'kaiten_create_child_card',
-        description: 'Create a child card under a parent card. Use this when you need to create a nested task, subtask, or child card with a parent_card_id.',
+        description: 'Create a child card under a parent card. Use this when you need to create a nested task, subtask, or child card.',
         inputSchema: {
           type: 'object',
           properties: {
             parentId: {
               type: 'number',
-              description: 'Parent card ID (also called parent_card_id) - the card under which to create the child card'
+              description: 'Parent card ID - the card under which to create the child card'
             },
             title: {
               type: 'string',
@@ -343,11 +343,11 @@ class MCPServer {
           properties: {
             cardId: {
               type: 'number',
-              description: 'Card ID to attach (the child/subtask card)'
+              description: 'Child card ID to attach'
             },
             parentId: {
               type: 'number',
-              description: 'Parent card ID (the parent_task card)'
+              description: 'Parent card ID'
             },
             position: {
               type: 'number',
